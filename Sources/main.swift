@@ -4,6 +4,12 @@ import HTTP
 import JSON
 
 let drop = Droplet()
+
+#if os(Linux)
+    import VaporTLS
+    drop.client = Client<TLSClientStream>.self
+#endif
+
 let token: String? = Env["GITHUB_TOKEN"]
 let db = try DB(port: 6380)
 let xserver = CrossServerFetcher(drop: drop, token: token)

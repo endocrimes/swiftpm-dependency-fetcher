@@ -9,3 +9,7 @@ let package = Package(
         .Package(url: "https://github.com/czechboy0/Tasks.git", majorVersion: 0, minor: 3)
     ]
 )
+
+#if os(Linux)
+package.dependencies.append(.Package(url: "https://github.com/vapor/tls-provider.git", "0.0.42"))
+#endif
