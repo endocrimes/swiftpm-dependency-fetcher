@@ -10,9 +10,9 @@ let xserver = CrossServerFetcher(drop: drop, token: token)
 let dataSource = ServerDataSource(local: db, server: xserver)
 
 //let name = "czechboy0/Redbird"
-//let name = "vapor/vapor"
-//let versions = Versions.all()
-//
+let name = "vapor/vapor"
+let versions = Versions.all()
+
 //do {
 //    let resolved = try resolve(
 //                getPackage: dataSource.getPackage,
@@ -20,6 +20,7 @@ let dataSource = ServerDataSource(local: db, server: xserver)
 //                rootName: name,
 //                versions: versions
 //    )
+//    
 //    print(resolved)
 //    print()
 //} catch {
@@ -38,8 +39,20 @@ drop.get("/dependencies") { req in
         rootName: name,
         versions: Versions.all()
     )
-    let node = try resolved.makeNode()
-    return try JSON(node: node)
+    let gv = resolved.asDOT()
+    let results = try Task.run(["dot", "-T", "png"], data: gv.bytes)
+    let png = Image(data: results.stdout)
+    return png
+    
+    
+//    let node = try resolved.makeNode()
+//    return try JSON(node: node)
 }
+
+//drop.get("/image") { req in
+//    
+//    let image = try loadImage(path: path)
+//    return image
+//}
 
 drop.serve()

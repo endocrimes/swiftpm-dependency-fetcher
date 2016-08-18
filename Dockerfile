@@ -8,4 +8,5 @@ EXPOSE 8080
 
 # mount in local sources via:  -v $(PWD):/package
 
+TODO: launch redis!
 CMD swift build && .build/debug/swiftpm-dependency-fetcher
