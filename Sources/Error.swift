@@ -12,5 +12,6 @@ enum ServerError: Error {
     case invalidVersion(String)
     
     case cacheMiss
+    case invalidFormat(String)
 }
 

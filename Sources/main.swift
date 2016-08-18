@@ -4,15 +4,14 @@ import HTTP
 import JSON
 
 let drop = Droplet()
-let token: String? = Env["GITHUB_BUILDA_TOKEN"]
+let token: String? = Env["GITHUB_TOKEN"]
 let db = try DB(port: 6380)
 let xserver = CrossServerFetcher(drop: drop, token: token)
 let dataSource = ServerDataSource(local: db, server: xserver)
 
 //let name = "czechboy0/Redbird"
-let name = "vapor/vapor"
-let versions = Versions.all()
-
+//let name = "vapor/vapor"
+//let versions = Versions.all()
 //do {
 //    let resolved = try resolve(
 //                getPackage: dataSource.getPackage,
@@ -20,39 +19,29 @@ let versions = Versions.all()
 //                rootName: name,
 //                versions: versions
 //    )
-//    
 //    print(resolved)
 //    print()
 //} catch {
 //    print(error)
 //}
 
-drop.get("/dependencies") { req in
-    guard
-        let q = req.query,
-        let name = q["q"].string,
-        !name.isEmpty else { throw ServerError.missingQuery }
+drop.get("dependencies", String.self, String.self) { req, author, name in
     
+    let formatString = req.query?["format"].string ?? OutputFormat.json.rawValue
+    guard let format = OutputFormat(rawValue: formatString) else {
+        return try Response(status: .badRequest, json: JSON(["error": "invalid format"]))
+    }
+    
+    let repoName = [author, name].joined(separator: "/")
     let resolved = try resolve(
         getPackage: dataSource.getPackage,
         getTags: dataSource.getTags,
-        rootName: name,
+        rootName: repoName,
         versions: Versions.all()
     )
-    let gv = resolved.asDOT()
-    let results = try Task.run(["dot", "-T", "png"], data: gv.bytes)
-    let png = Image(data: results.stdout)
-    return png
     
-    
-//    let node = try resolved.makeNode()
-//    return try JSON(node: node)
+    let response = try format.format(graph: resolved)
+    return response
 }
-
-//drop.get("/image") { req in
-//    
-//    let image = try loadImage(path: path)
-//    return image
-//}
 
 drop.serve()
