@@ -12,6 +12,12 @@ Dependencies of your SwiftPM packages as a service.
 		- `png` - png image of the rendered dependency graph
 		- `dot` - [dot/gv](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) format (open in any graphing app, e.g. OmniGraffle)
 
+# Example
+
+`/dependencies/vapor/vapor?format=png` returns the following rendered dependency tree
+
+![](Meta/vapor.png)
+
 # Requirements for running locally
 
 - a Redis server running on the port 6380 before booting the server (just `redis-server ./Redis/redis.conf` from the root folder to start the server with the desired config)
