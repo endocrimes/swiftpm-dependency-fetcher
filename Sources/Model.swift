@@ -175,10 +175,28 @@ struct Tag: NodeInitializable, NodeConvertible {
     }
 }
 
-struct ResolvedPackage {
+struct ResolvedPackage: NodeConvertible {
     let name: String
     let version: Version
     let dependencies: [String]
+    
+    init(name: String, version: Version, dependencies: [String]) {
+        self.name = name
+        self.version = version
+        self.dependencies = dependencies
+    }
+    
+    init(node: Node, in context: Context) throws {
+        fatalError("Not implemented")
+    }
+    
+    func makeNode() throws -> Node {
+        return [
+            "name": name.makeNode(),
+            "version": try version.makeNode(),
+            "dependencies": try dependencies.makeNode()
+        ]
+    }
 }
 
 extension ResolvedPackage: Hashable {

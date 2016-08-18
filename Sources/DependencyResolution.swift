@@ -1,7 +1,24 @@
+import Node
 
-struct DependencyGraph {
+struct DependencyGraph: NodeConvertible {
     let root: String
     let relationships: [String: ResolvedPackage]
+    
+    init(root: String, relationships: [String: ResolvedPackage]) {
+        self.root = root
+        self.relationships = relationships
+    }
+    
+    init(node: Node, in context: Context) throws {
+        fatalError("Not implemented")
+    }
+    
+    func makeNode() throws -> Node {
+        return [
+            "root": root.makeNode(),
+            "relationships": try relationships.makeNode()
+        ]
+    }
 }
 
 func resolve(
