@@ -20,7 +20,9 @@ extension OutputFormat {
             
         case .dot:
             let dot = graph.asDOT()
-            return dot.makeResponse()
+            let response = dot.makeResponse()
+            response.headers["Content-Type"] = "text/vnd.graphviz"
+            return response
             
         case .png:
             let gv = graph.asDOT()
