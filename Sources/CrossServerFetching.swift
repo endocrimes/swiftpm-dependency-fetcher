@@ -15,6 +15,11 @@ extension Droplet {
     }
 }
 
+enum ConditionalResponse<T> {
+    case notModified
+    case newData(T)
+}
+
 struct CrossServerFetcher {
 
     let drop: Droplet
@@ -30,7 +35,7 @@ struct CrossServerFetcher {
         return headers
     }
 
-    func getPackageContents(name: String, tag: Tag) throws -> String {
+    private func getPackageContents(name: String, tag: Tag) throws -> String {
         //fetch the package
         let packageUrl = "https://api.github.com/repos/\(name)/contents/Package.swift?ref=\(tag.name)"
         let packageResp = try drop.getWithRedirect(packageUrl, headers: headers)
@@ -55,15 +60,27 @@ struct CrossServerFetcher {
         let converterUrl = "http://swiftpm.honza.tech/to-json"
         let body: Body = .data(contents.bytes)
         let resp = try drop.client.post(converterUrl, headers: headers, body: body)
-        guard let node = resp.json?.makeNode() else { throw ServerError.convertFailed }
-        return try Package(node: node, in: Node.object(["githubName": .string(name)]))
+        guard var node = resp.json?.makeNode() else { throw ServerError.convertFailed }
+        node["githubName"] = .string(name)
+        return try Package(node: node, in: EmptyNode)
     }
     
-    func getTags(name: String) throws -> [Tag] {
+    //TODO: automatically delete the key after a certain time
+    //so that we don't have to wait for 304 on every single fetch for tags
+    func getTags(name: String, etag: String?) throws -> ConditionalResponse<([Tag], String)> {
         let tagsUrl = "https://api.github.com/repos/\(name)/tags"
+        //TODO: etag for request & response
+        var headers = self.headers
+        if let etag = etag {
+            headers["If-None-Match"] = etag
+        }
         let resp = try drop.getWithRedirect(tagsUrl, headers: headers)
+        if resp.status == .notModified {
+            return .notModified
+        }
         guard let nodes = resp.json?.makeNode().nodeArray else { throw ServerError.failedTags }
-        let tags: [Tag] = try nodes.map { try Tag(node: $0, in: EmptyNode) }
-        return tags
+        let tags: [Tag] = try nodes.converted()
+        let newEtag: String = resp.headers["Etag"]!.string!
+        return .newData(tags, newEtag)
     }
 }

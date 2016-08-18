@@ -10,5 +10,7 @@ enum ServerError: Error {
     case dependencyGraphConflict(Dependency, String)
     case locationHeaderMissing
     case invalidVersion(String)
+    
+    case cacheMiss
 }
 

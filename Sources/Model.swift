@@ -1,8 +1,8 @@
-
 import Vapor
+import JSON
 import Foundation
 
-struct Version: CustomStringConvertible, NodeInitializable {
+struct Version: CustomStringConvertible, NodeInitializable, NodeConvertible {
     let major: Int
     let minor: Int
     let patch: Int
@@ -49,6 +49,10 @@ struct Version: CustomStringConvertible, NodeInitializable {
     static func min() -> Version {
         return Version(major: 0, minor: 0, patch: 0)
     }
+    
+    func makeNode() throws -> Node {
+        return .string(description)
+    }
 }
 
 extension Version: Comparable {
@@ -68,7 +72,7 @@ extension Version: Comparable {
     }
 }
 
-struct Versions: NodeInitializable {
+struct Versions: NodeInitializable, NodeConvertible {
     let from: Version
     let to: Version
     
@@ -93,9 +97,16 @@ struct Versions: NodeInitializable {
     static func range(major: Int, minor: Int) -> Versions {
         return Versions(from: Version(major: major, minor: minor, patch: 0), to: Version(major: major, minor: minor, patch: Int.max))
     }
+    
+    func makeNode() throws -> Node {
+        return [
+            "lowerBound": try from.makeNode(),
+            "upperBound": try to.makeNode()
+        ]
+    }
 }
 
-struct Dependency: NodeInitializable {
+struct Dependency: NodeInitializable, NodeConvertible {
     let url: String
     let versions: Versions
     
@@ -117,21 +128,36 @@ struct Dependency: NodeInitializable {
         }
         return name
     }
+    
+    func makeNode() throws -> Node {
+        return [
+            "url": url.makeNode(),
+            "version": try versions.makeNode()
+        ]
+    }
 }
 
-struct Package: NodeInitializable {
+struct Package: NodeInitializable, NodeConvertible {
     let name: String
     let githubName: String
     let dependencies: [Dependency]
     
     init(node: Node, in context: Context) throws {
         self.name = try node.extract("name")
-        self.githubName = try (context as! Node).extract("githubName")
+        self.githubName = try node.extract("githubName")
         self.dependencies = try node.extract("dependencies")
+    }
+    
+    func makeNode() throws -> Node {
+        return [
+            "name": name.makeNode(),
+            "githubName": githubName.makeNode(),
+            "dependencies": try dependencies.makeNode()
+        ]
     }
 }
 
-struct Tag: NodeInitializable {
+struct Tag: NodeInitializable, NodeConvertible {
     let name: String
     
     init(node: Node, in context: Context) throws {
@@ -140,6 +166,12 @@ struct Tag: NodeInitializable {
     
     init(name: String) {
         self.name = name
+    }
+    
+    func makeNode() throws -> Node {
+        return [
+            "name": name.makeNode()
+        ]
     }
 }
 
@@ -156,5 +188,12 @@ extension ResolvedPackage: Hashable {
     
     static func ==(lhs: ResolvedPackage, rhs: ResolvedPackage) -> Bool {
         return lhs.name == rhs.name
+    }
+}
+
+extension String {
+    
+    func json() throws -> JSON {
+        return try JSON.init(bytes: Array(self.utf8))
     }
 }

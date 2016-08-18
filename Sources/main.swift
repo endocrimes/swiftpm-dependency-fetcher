@@ -3,7 +3,9 @@ import Environment
 
 let drop = Droplet()
 let token: String? = Env["GITHUB_BUILDA_TOKEN"]
+let db = try DB(port: 6380)
 let xserver = CrossServerFetcher(drop: drop, token: token)
+let dataSource = ServerDataSource(local: db, server: xserver)
 
 //let name = "czechboy0/Redbird"
 let name = "vapor/vapor"
@@ -11,8 +13,8 @@ let versions = Versions.all()
 
 do {
     let resolved = try resolve(
-                getPackage: { return try xserver.getPackage(name: $0.0, tag: $0.1) },
-                getTags: { return try xserver.getTags(name: $0) },
+                getPackage: dataSource.getPackage,
+                getTags: dataSource.getTags,
                 rootName: name,
                 versions: versions
     )
