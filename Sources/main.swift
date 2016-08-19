@@ -43,7 +43,7 @@ drop.get("dependencies", String.self, String.self) { req, author, projectName in
         }
     }
     
-    let repoName = [author, projectName].joined(separator: "/")
+    let repoName = [author, projectName].joined(separator: "/").lowercased()
     let tags = try dataSource.getTags(name: repoName)
     let version = try tags.latestWithConstraints(versions: versions)
     
