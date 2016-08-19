@@ -48,13 +48,25 @@ public struct Task {
             pipe.fileHandleForWriting.closeFile()
             stdin = pipe
         } else {
-             stdin = FileHandle.nullDevice
+            #if os(Linux)
+            stdin = FileHandle.nullDevice()
+            #else
+            stdin = FileHandle.nullDevice    
+            #endif
         }
         task.standardInput = stdin
         task.launch()
         
         var stdoutData = Data()
         var stderrData = Data()
+        
+        let isRunning = { () -> Bool in
+            #if os(Linux)
+            return task.running
+            #else
+            return task.isRunning
+            #endif
+        }
         
         repeat {
             let newStdoutData = stdoutHandle.readDataToEndOfFile()
@@ -66,7 +78,7 @@ public struct Task {
             if !newStderrData.isEmpty {
                 stderrData.append(newStderrData)
             }
-        } while task.isRunning
+        } while isRunning()
         
         let result = TaskResult(code: task.terminationStatus, stdout: stdoutData, stderr: stderrData)
         return result
