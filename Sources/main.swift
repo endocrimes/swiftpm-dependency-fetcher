@@ -60,9 +60,7 @@ drop.get("dependencies", String.self, String.self) { req, author, name in
         rootName: repoName,
         versions: versions
     )
-    
-    try! resolved.asDOT().write(toFile: "/Users/honzadvorsky/Documents/swiftpm-dependency-fetcher/v2.gv", atomically: true, encoding: .utf8)
-    
+        
     let response = try format.format(graph: resolved)
     return response
 }

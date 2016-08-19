@@ -51,7 +51,7 @@ public struct Task {
             #if os(Linux)
             stdin = FileHandle.nullDevice()
             #else
-            stdin = FileHandle.nullDevice    
+            stdin = FileHandle.nullDevice
             #endif
         }
         task.standardInput = stdin
