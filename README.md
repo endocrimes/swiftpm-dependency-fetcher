@@ -44,6 +44,22 @@ This is a live rendered dependency tree for this repository, `swiftpm-dependency
 - a Redis server running on the port 6380 before booting the server (just `redis-server ./Redis/redis.conf` from the root folder to start the server with the desired config)
 - a GitHub personal token in the `$GITHUB_TOKEN` environment variable
 
+# Interactive D3 graphs
+
+You can also view your dependencies in 3 interactive formats:
+
+## 1. d3-deps
+
+![](Meta/d3-deps.png)
+
+## 2. d3-graph
+
+![](Meta/d3-graph.png)
+
+## 3. d3-tree
+
+![](Meta/d3-tree.png)
+
 :gift_heart: Contributing
 ------------
 Please create an issue with a description of your problem or open a pull request with a fix.
