@@ -41,20 +41,12 @@ public struct Task {
         task.standardError = stderr
         let stderrHandle = stderr.fileHandleForReading
       
-        let stdin: AnyObject?
         if let data = data {
             let pipe = Pipe()
             pipe.fileHandleForWriting.write(data)
             pipe.fileHandleForWriting.closeFile()
-            stdin = pipe
-        } else {
-            #if os(Linux)
-            stdin = FileHandle.nullDevice()
-            #else
-            stdin = FileHandle.nullDevice
-            #endif
+            task.standardInput = pipe
         }
-        task.standardInput = stdin
         task.launch()
         
         var stdoutData = Data()

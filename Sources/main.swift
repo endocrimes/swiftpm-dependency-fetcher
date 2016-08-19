@@ -53,7 +53,7 @@ drop.get("dependencies", String.self, String.self) { req, author, name in
     }
     
     let repoName = [author, name].joined(separator: "/")
-    print("-> \(repoName) : \(format) : \(tag)")
+    print("-> \(repoName) : \(format) : \(tag ?? "latest")")
     let resolved = try resolve(
         getPackage: dataSource.getPackage,
         getTags: dataSource.getTags,
