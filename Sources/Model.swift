@@ -117,8 +117,12 @@ struct Dependency: NodeInitializable, NodeConvertible {
     
     func githubName() -> String {
         let comps = URLComponents(string: url.lowercased())!
-        let pathComps = comps
-            .path
+        #if os(Linux)
+        let path = comps.path!
+        #else
+        let path = comps.path
+        #endif
+        let pathComps = path
             .characters
             .split(separator: "/", maxSplits: Int.max, omittingEmptySubsequences: true)
             .map(String.init)
