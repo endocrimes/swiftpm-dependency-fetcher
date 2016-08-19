@@ -17,7 +17,7 @@ Dependencies of your SwiftPM packages as a service.
 
 # Example
 
-`[http://swiftpm-deps.honza.tech/dependencies/vapor/vapor?format=png&tag=0.16.2](http://swiftpm-deps.honza.tech/dependencies/vapor/vapor?format=png&tag=0.16.2)` returns the following rendered dependency tree
+[http://swiftpm-deps.honza.tech/dependencies/vapor/vapor?format=png&tag=0.16.2](http://swiftpm-deps.honza.tech/dependencies/vapor/vapor?format=png&tag=0.16.2) returns the following rendered dependency tree
 
 ![](Meta/vapor.png)
 
