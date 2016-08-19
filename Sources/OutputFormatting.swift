@@ -8,6 +8,7 @@ enum OutputFormat: String {
 
 import HTTP
 import JSON
+import Foundation
 
 extension OutputFormat {
     
@@ -26,7 +27,7 @@ extension OutputFormat {
             
         case .png:
             let gv = graph.asDOT()
-            let results = try Task.run(["dot", "-T", "png"], data: gv.bytes)
+            let results = try Task.run(["dot", "-T", "png"], data: Data(gv.bytes))
             let png = Image(data: results.stdout)
             return try png.makeResponse()
         }

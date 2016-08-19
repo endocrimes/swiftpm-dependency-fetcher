@@ -14,7 +14,7 @@ public struct Task {
         return try run(args)
     }
     
-    public static func run(_ args: [String], data: [UInt8]? = nil, pwd: String? = nil, inheritEnvironment: Bool = true) throws -> TaskResult {
+    public static func run(_ args: [String], data: Data? = nil, pwd: String? = nil, inheritEnvironment: Bool = true) throws -> TaskResult {
         
         let task = Foundation.Task()
         
