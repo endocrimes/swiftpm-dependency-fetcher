@@ -3,6 +3,7 @@ enum OutputFormat: String {
     case json //default
     case png
     case dot
+    case d3json
     //TODO: plain text with ascii arrows?
 }
 
@@ -33,6 +34,10 @@ extension OutputFormat {
             let results = try Task.run(["dot", "-T", "png"], data: data)
             let png = Image(data: results.stdout)
             return try png.makeResponse()
+            
+        case .d3json:
+            let d3 = try graph.asD3()
+            return d3.makeResponse()
         }
     }
 }
