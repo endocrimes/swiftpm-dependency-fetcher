@@ -18,6 +18,12 @@ let db = try DB(port: 6380)
 let xserver = CrossServerFetcher(drop: drop, token: token)
 let dataSource = ServerDataSource(local: db, server: xserver)
 
+drop.get("/") { _ in
+    let css = "<style>body { padding: 50px; font: 14px \"Lucida Grande\", Helvetica, Arial, sans-serif; } a {color: #00B7FF;}</style>"
+    let body = "<html><head>\(css)</head><body><h1>swiftpm-deps.honza.tech</h1><p>See documentation at <a href=\"https://github.com/czechboy0/swiftpm-dependency-fetcher\">github.com/czechboy0/swiftpm-dependency-fetcher</p></h1></body></html>"
+    return Response(headers: ["Content-Type":"text/html"], body: body)
+}
+
 drop.get("dependencies", String.self, String.self) { req, author, projectName in
     
     let tagString = req.query?["tag"].string
