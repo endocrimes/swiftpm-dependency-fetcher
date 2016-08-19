@@ -15,8 +15,8 @@ Dependencies of your SwiftPM packages as a service.
 		- `png` - png image of the rendered dependency graph
 		- `dot` - [dot/gv](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) format (open in any graphing app, e.g. OmniGraffle)
 		- [`d3deps`](#1-d3deps) a page with an interactive dependency graph 1 (experimental, will change)
-		- [`d3graph`](#1-d3graph) a page with an interactive dependency graph 2 (experimental, will change)
-		- [`d3tree`](#1-d3tree) a page with an interactive dependency tree 3 (experimental, will change)
+		- [`d3graph`](#2-d3graph) a page with an interactive dependency graph 2 (experimental, will change)
+		- [`d3tree`](#3-d3tree) a page with an interactive dependency tree 3 (experimental, will change)
 		- `d3depsjs` dependencies in JavaScript format for a d3 graph 1 (experimental, will change)
 		- `d3graphjson` dependencies in JSON format for a d3 graph 2 (experimental, will change)
 		- `d3treejson` dependencies in JSON format for a d3 tree 3 (experimental, will change)
