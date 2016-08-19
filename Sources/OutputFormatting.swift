@@ -3,8 +3,10 @@ enum OutputFormat: String {
     case json //default
     case png
     case dot
-    case d3json
-    case d3
+    case d3graphjson
+    case d3graph
+    case d3treejson
+    case d3tree
     //TODO: plain text with ascii arrows?
 }
 
@@ -36,11 +38,15 @@ extension OutputFormat {
             let png = Image(data: results.stdout)
             return try png.makeResponse()
             
-        case .d3json:
-            let d3 = try graph.asD3()
+        case .d3graphjson:
+            let d3 = try graph.asD3Graph()
             return d3.makeResponse()
             
-        case .d3: fatalError()
+        case .d3treejson:
+            let d3 = try graph.asD3Tree()
+            return d3.makeResponse()
+            
+        case .d3graph, .d3tree: fatalError()
         }
     }
 }

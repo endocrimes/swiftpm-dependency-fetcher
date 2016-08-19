@@ -3,7 +3,7 @@ import JSON
 
 extension DependencyGraph {
     
-    func asD3() throws -> String {
+    func asD3Graph() throws -> String {
         
         struct Arrow: NodeRepresentable {
             let source: String
@@ -28,5 +28,33 @@ extension DependencyGraph {
         let node = try arrows.makeNode()
         return try node.jsonString()
     }
+    
+    func asD3Tree() throws -> String {
+        
+        struct TreeNode: NodeRepresentable {
+            let name: String
+            let children: [TreeNode]
+            
+            private func makeNode() throws -> Node {
+                var node: Node = [
+                    "name": name.makeNode()
+                ]
+                if !children.isEmpty {
+                    node["children"] = .array(try children.converted())
+                }
+                return node
+            }
+        }
+        
+        func nodify(name: String) -> TreeNode {
+            let pkg = relationships[name]!
+            let deps = pkg.dependencies.map { return nodify(name: $0) }
+            return TreeNode(name: name, children: deps)
+        }
+        
+        let node = try nodify(name: root).makeNode()
+        return try node.jsonString()
+    }
+
 }
 
