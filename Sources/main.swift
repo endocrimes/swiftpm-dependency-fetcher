@@ -47,7 +47,7 @@ drop.get("dependencies", String.self, String.self) { req, author, projectName in
             ])
     case .d3deps:
         return try drop.view("d3-deps.mustache", context: [
-            "source_link": "/dependencies/vapor/vapor?format=d3depsjs"
+            "source_link": "/dependencies/\(repoName)?format=d3depsjs"
             ])
     default: break
     }
