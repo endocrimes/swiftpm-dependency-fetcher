@@ -12,30 +12,15 @@ let drop = Droplet()
 #endif
 
 let token: String? = Env["GITHUB_TOKEN"]
-print("GitHub token: \(token)")
+let secretToken = token == nil ? "nil" : Array(repeating: "*", count: token!.count).joined(separator: "")
+print("GitHub token: \(secretToken)")
 let db = try DB(port: 6380)
 let xserver = CrossServerFetcher(drop: drop, token: token)
 let dataSource = ServerDataSource(local: db, server: xserver)
 
-//let name = "czechboy0/Redbird"
-//let name = "vapor/vapor"
-//let versions = Versions.all()
-//do {
-//    let resolved = try resolve(
-//                getPackage: dataSource.getPackage,
-//                getTags: dataSource.getTags,
-//                rootName: name,
-//                versions: versions
-//    )
-//    print(resolved)
-//    print()
-//} catch {
-//    print(error)
-//}
-
-drop.get("dependencies", String.self, String.self) { req, author, name in
+drop.get("dependencies", String.self, String.self) { req, author, projectName in
     
-    let tag = req.query?["tag"].string
+    let tagString = req.query?["tag"].string
     let formatString = req.query?["format"].string ?? OutputFormat.json.rawValue
     guard let format = OutputFormat(rawValue: formatString) else {
         return try Response(status: .badRequest, json: JSON(["error": "invalid format"]))
@@ -43,25 +28,40 @@ drop.get("dependencies", String.self, String.self) { req, author, name in
     
     //use passed-in version or use the latest tag
     var versions = Versions.all()
-    if let tag = tag {
+    if let tagString = tagString {
         do {
-            let v = try Version(tag)
+            let v = try Version(tagString)
             versions = Versions(from: v, to: v)
         } catch {
             return try Response(status: .badRequest, json: JSON(["error": "invalid tag"]))
         }
     }
     
-    let repoName = [author, name].joined(separator: "/")
-    print("-> \(repoName) : \(format) : \(tag ?? "latest")")
-    let resolved = try resolve(
-        getPackage: dataSource.getPackage,
-        getTags: dataSource.getTags,
-        rootName: repoName,
-        versions: versions
-    )
-        
-    let response = try format.format(graph: resolved)
+    let repoName = [author, projectName].joined(separator: "/")
+    let tags = try dataSource.getTags(name: repoName)
+    let version = try tags.latestWithConstraints(versions: versions)
+    
+    print("-> \(repoName) : \(format) : \(version.description)")
+    
+    //try cached graph first
+    let graph: DependencyGraph
+    let tag = Tag(name: version.description)
+    if let cached = try db.getResolved(name: repoName, tag: tag) {
+        graph = cached
+        print("Cache hit")
+    } else {
+        let resolved = try resolve(
+            getPackage: dataSource.getPackage,
+            getTags: dataSource.getTags,
+            rootName: repoName,
+            versions: versions
+        )
+        try db.saveResolved(name: repoName, tag: tag, graph: resolved)
+        graph = resolved
+        print("Cache miss")
+    }
+    
+    let response = try format.format(graph: graph)
     return response
 }
 

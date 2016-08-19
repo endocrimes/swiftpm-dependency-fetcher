@@ -179,6 +179,20 @@ struct Tag: NodeInitializable, NodeConvertible {
     }
 }
 
+extension Collection where Iterator.Element == Tag {
+    
+    func latestWithConstraints(versions: Versions) throws -> Version {
+        guard let version = self
+            .flatMap({ return try? Version($0) })
+            .filter(versions.contains)
+            .sorted()
+            .last else {
+                throw ServerError.dependencyGraphCannotBeSatisfied(versions, Array(self))
+        }
+        return version
+    }
+}
+
 struct ResolvedPackage: NodeConvertible {
     let name: String
     let version: Version
@@ -191,7 +205,9 @@ struct ResolvedPackage: NodeConvertible {
     }
     
     init(node: Node, in context: Context) throws {
-        fatalError("Not implemented")
+        self.name = try node.extract("name")
+        self.version = try node.extract("version")
+        self.dependencies = try node.extract("dependencies")
     }
     
     func makeNode() throws -> Node {

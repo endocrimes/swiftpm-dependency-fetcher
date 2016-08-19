@@ -2,6 +2,15 @@ import Redbird
 import Node
 import JSON
 
+extension Node {
+    
+    func jsonString() throws -> String {
+        let json = JSON.init(node: self, in: EmptyNode)
+        let contents = try json.makeBytes().string
+        return contents
+    }
+}
+
 class DB {
     
     private let redbird: Redbird
@@ -18,6 +27,12 @@ class DB {
     private func tagsKey(name: String) -> String {
         return "tags:\(name)"
     }
+    
+    private func graphKey(name: String, tag: Tag) -> String {
+        return "graph:\(name):\(tag.name)"
+    }
+    
+    private let graphCacheDuration = 60 * 60 * 24 //one day in seconds
     
     func getPackage(name: String, tag: Tag) throws -> Package {
         let key = packageKey(name: name, tag: tag)
@@ -37,8 +52,7 @@ class DB {
     func savePackage(package: Package, name: String, tag: Tag) throws {
         let key = packageKey(name: name, tag: tag)
         let node = try package.makeNode()
-        let json = JSON.init(node: node, in: EmptyNode)
-        let contents = try json.makeBytes().string
+        let contents = try node.jsonString()
         _ = try redbird.command("SET", params: [key, contents]).toString()
     }
     
@@ -64,8 +78,27 @@ class DB {
             "etag": etag.makeNode(),
             "tagNodes": try tags.makeNode()
         ]
-        let json = JSON.init(node: node, in: EmptyNode)
-        let contents = try json.makeBytes().string
+        let contents = try node.jsonString()
         _ = try redbird.command("SET", params: [key, contents]).toString()
+    }
+    
+    func getResolved(name: String, tag: Tag) throws -> DependencyGraph? {
+        let key = graphKey(name: name, tag: tag)
+        let resp = try redbird.command("GET", params: [key])
+        if resp.respType == .NullBulkString {
+            return nil
+        }
+        let node = try resp
+            .toString()
+            .json()
+            .makeNode()
+        let graph: DependencyGraph = try node.converted()
+        return graph
+    }
+    
+    func saveResolved(name: String, tag: Tag, graph: DependencyGraph) throws {
+        let key = graphKey(name: name, tag: tag)
+        let contents = try graph.makeNode().jsonString()
+        _ = try redbird.command("SETEX", params: [key, String(graphCacheDuration), contents]).toString()
     }
 }

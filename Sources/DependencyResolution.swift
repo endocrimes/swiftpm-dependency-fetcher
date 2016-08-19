@@ -10,7 +10,8 @@ struct DependencyGraph: NodeConvertible {
     }
     
     init(node: Node, in context: Context) throws {
-        fatalError("Not implemented")
+        self.root = try node.extract("root")
+        self.relationships = try node.extract("relationships")
     }
     
     func makeNode() throws -> Node {
@@ -39,13 +40,7 @@ func resolve(
         
         //get version
         let tags = try getTags(name)
-        guard let version = tags
-            .flatMap({ return try? Version($0) })
-            .filter(versions.contains)
-            .sorted()
-            .last else {
-                throw ServerError.dependencyGraphCannotBeSatisfied(versions, tags)
-        }
+        let version = try tags.latestWithConstraints(versions: versions)
         
         //get package
         let package = try getPackage(name, Tag(name: version.description))
@@ -72,7 +67,6 @@ func resolve(
         
         //create a new resolved package
         let pkg = ResolvedPackage(name: name, version: version, dependencies: Array(deps))
-        print("Resolving \(pkg)")
         resolved[name] = pkg
     }
     
