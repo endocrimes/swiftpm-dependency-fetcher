@@ -13,5 +13,6 @@ enum ServerError: Error {
     
     case cacheMiss
     case invalidFormat(String)
+    case dataConversion
 }
 

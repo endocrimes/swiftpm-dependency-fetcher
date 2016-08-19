@@ -27,7 +27,10 @@ extension OutputFormat {
             
         case .png:
             let gv = graph.asDOT()
-            let results = try Task.run(["dot", "-T", "png"], data: Data(gv.bytes))
+            guard let data = gv.data(using: .utf8) else {
+                throw ServerError.dataConversion
+            }
+            let results = try Task.run(["dot", "-T", "png"], data: data)
             let png = Image(data: results.stdout)
             return try png.makeResponse()
         }
