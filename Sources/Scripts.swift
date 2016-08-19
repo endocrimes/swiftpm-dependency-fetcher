@@ -41,22 +41,34 @@ public struct Task {
         task.standardError = stderr
         let stderrHandle = stderr.fileHandleForReading
       
+        let stdin: AnyObject?
         if let data = data {
-            let stdin = Pipe()
-            task.standardInput = stdin
-            task.launch()
-            stdin.fileHandleForWriting.write(data)
-            stdin.fileHandleForWriting.closeFile()
+            let pipe = Pipe()
+            pipe.fileHandleForWriting.write(data)
+            pipe.fileHandleForWriting.closeFile()
+            stdin = pipe
         } else {
-            task.launch()
+             stdin = FileHandle.nullDevice
         }
+        task.standardInput = stdin
+        task.launch()
         
-        task.waitUntilExit()
+        var stdoutData = Data()
+        var stderrData = Data()
         
-        let stdoutString = stdoutHandle.readDataToEndOfFile()
-        let stderrString = stderrHandle.readDataToEndOfFile()
+        repeat {
+            let newStdoutData = stdoutHandle.readDataToEndOfFile()
+            if !newStdoutData.isEmpty {
+                stdoutData.append(newStdoutData)
+            }
+
+            let newStderrData = stderrHandle.readDataToEndOfFile()
+            if !newStderrData.isEmpty {
+                stderrData.append(newStderrData)
+            }
+        } while task.isRunning
         
-        let result = TaskResult(code: task.terminationStatus, stdout: stdoutString, stderr: stderrString)
+        let result = TaskResult(code: task.terminationStatus, stdout: stdoutData, stderr: stderrData)
         return result
     }
 }

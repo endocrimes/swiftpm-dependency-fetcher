@@ -2,7 +2,7 @@ import Vapor
 import Environment
 import HTTP
 import JSON
-
+import Foundation
 
 #if os(Linux)
 import VaporTLS
@@ -35,18 +35,33 @@ let dataSource = ServerDataSource(local: db, server: xserver)
 
 drop.get("dependencies", String.self, String.self) { req, author, name in
     
+    let tag = req.query?["tag"].string
     let formatString = req.query?["format"].string ?? OutputFormat.json.rawValue
     guard let format = OutputFormat(rawValue: formatString) else {
         return try Response(status: .badRequest, json: JSON(["error": "invalid format"]))
     }
     
+    //use passed-in version or use the latest tag
+    var versions = Versions.all()
+    if let tag = tag {
+        do {
+            let v = try Version(tag)
+            versions = Versions(from: v, to: v)
+        } catch {
+            return try Response(status: .badRequest, json: JSON(["error": "invalid tag"]))
+        }
+    }
+    
     let repoName = [author, name].joined(separator: "/")
+    print("-> \(repoName) : \(format) : \(tag)")
     let resolved = try resolve(
         getPackage: dataSource.getPackage,
         getTags: dataSource.getTags,
         rootName: repoName,
-        versions: Versions.all()
+        versions: versions
     )
+    
+    try! resolved.asDOT().write(toFile: "/Users/honzadvorsky/Documents/swiftpm-dependency-fetcher/v2.gv", atomically: true, encoding: .utf8)
     
     let response = try format.format(graph: resolved)
     return response
