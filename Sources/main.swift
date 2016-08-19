@@ -27,12 +27,6 @@ drop.get("/") { _ in
     return Response(headers: ["Content-Type":"text/html"], body: body)
 }
 
-//drop.get("d3") { _ in
-//    return try drop.view("d3-tree.mustache", context: [
-//        "source_link": "/dependencies/vapor/vapor?format=d3treejson"
-//        ])
-//}
-
 drop.get("dependencies", String.self, String.self) { req, author, projectName in
     
     let tagString = req.query?["tag"].string
@@ -42,14 +36,20 @@ drop.get("dependencies", String.self, String.self) { req, author, projectName in
     }
     let repoName = [author, projectName].joined(separator: "/").lowercased()
 
-    if .d3graph == format {
+    switch format {
+    case .d3graph:
         return try drop.view("d3-graph.mustache", context: [
             "source_link": "/dependencies/\(repoName)?format=d3graphjson"
-        ])
-    } else if .d3tree == format {
+            ])
+    case .d3tree:
         return try drop.view("d3-tree.mustache", context: [
             "source_link": "/dependencies/\(repoName)?format=d3treejson"
             ])
+    case .d3deps:
+        return try drop.view("d3-deps.mustache", context: [
+            "source_link": "/dependencies/vapor/vapor?format=d3depsjs"
+            ])
+    default: break
     }
     
     //use passed-in version or use the latest tag

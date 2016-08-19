@@ -7,6 +7,8 @@ enum OutputFormat: String {
     case d3graph
     case d3treejson
     case d3tree
+    case d3depsjs
+    case d3deps
     //TODO: plain text with ascii arrows?
 }
 
@@ -46,7 +48,11 @@ extension OutputFormat {
             let d3 = try graph.asD3Tree()
             return d3.makeResponse()
             
-        case .d3graph, .d3tree: fatalError()
+        case .d3depsjs:
+            let d3 = try graph.asD3Deps()
+            return d3.makeResponse()
+            
+        case .d3graph, .d3tree, .d3deps: fatalError()
         }
     }
 }

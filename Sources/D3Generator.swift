@@ -29,6 +29,35 @@ extension DependencyGraph {
         return try node.jsonString()
     }
     
+    func asD3Deps() throws -> String {
+        
+        struct Link: NodeRepresentable {
+            let source: String
+            let dest: String
+            
+            private func makeNode() throws -> Node {
+                return [
+                    "source": source.makeNode(),
+                    "dest": dest.makeNode()
+                ]
+            }
+        }
+        
+        var links: [Link] = []
+        for (name, pkg) in relationships {
+            for dep in pkg.dependencies {
+                links.append(Link(source: name, dest: dep))
+            }
+        }
+        
+        let node: Node = [
+            "links": try links.makeNode()
+        ]
+        let jsonString = try node.jsonString()
+        let out = "var dependencies = " + jsonString
+        return out
+    }
+    
     func asD3Tree() throws -> String {
         
         struct TreeNode: NodeRepresentable {
