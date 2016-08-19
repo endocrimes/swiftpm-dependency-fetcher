@@ -4,6 +4,7 @@ enum OutputFormat: String {
     case png
     case dot
     case d3json
+    case d3
     //TODO: plain text with ascii arrows?
 }
 
@@ -38,6 +39,8 @@ extension OutputFormat {
         case .d3json:
             let d3 = try graph.asD3()
             return d3.makeResponse()
+            
+        case .d3: fatalError()
         }
     }
 }

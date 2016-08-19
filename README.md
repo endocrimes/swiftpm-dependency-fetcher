@@ -14,6 +14,8 @@ Dependencies of your SwiftPM packages as a service.
 		- `json` - JSON of the dependency graph
 		- `png` - png image of the rendered dependency graph
 		- `dot` - [dot/gv](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) format (open in any graphing app, e.g. OmniGraffle)
+		- `d3` a page with an interactive graph (experimental, will change)
+		- `d3json` dependencies in JSON format for d3 (experimental, will change)
 
 # Example
 

@@ -27,19 +27,20 @@ drop.get("/") { _ in
     return Response(headers: ["Content-Type":"text/html"], body: body)
 }
 
-drop.get("d3") { _ in
-    let name = "vapor/vapor"
-    return try drop.view("d3.mustache", context: [
-        "source_link": "dependencies/\(name)?format=d3json"
-    ])
-}
-
 drop.get("dependencies", String.self, String.self) { req, author, projectName in
     
     let tagString = req.query?["tag"].string
     let formatString = req.query?["format"].string ?? OutputFormat.json.rawValue
     guard let format = OutputFormat(rawValue: formatString) else {
         return try Response(status: .badRequest, json: JSON(["error": "invalid format"]))
+    }
+    let repoName = [author, projectName].joined(separator: "/").lowercased()
+
+    if .d3 == format {
+        //redirect and render
+        return try drop.view("d3.mustache", context: [
+            "source_link": "/dependencies/\(repoName)?format=d3json"
+        ])
     }
     
     //use passed-in version or use the latest tag
@@ -53,7 +54,6 @@ drop.get("dependencies", String.self, String.self) { req, author, projectName in
         }
     }
     
-    let repoName = [author, projectName].joined(separator: "/").lowercased()
     let tags = try dataSource.getTags(name: repoName)
     let version = try tags.latestWithConstraints(versions: versions)
     
