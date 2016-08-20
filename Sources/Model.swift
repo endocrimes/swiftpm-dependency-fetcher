@@ -182,8 +182,11 @@ struct Tag: NodeInitializable, NodeConvertible {
 extension Collection where Iterator.Element == Tag {
     
     func latestWithConstraints(versions: Versions) throws -> Version {
-        guard let version = self
-            .flatMap({ return try? Version($0) })
+        let vs = self.flatMap({ return try? Version($0) })
+        guard !vs.isEmpty else {
+            throw ServerError.noTagsFound
+        }
+        guard let version = vs
             .filter(versions.contains)
             .sorted()
             .last else {

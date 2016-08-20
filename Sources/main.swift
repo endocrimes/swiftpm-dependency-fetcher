@@ -14,6 +14,9 @@ let drop = Droplet(client: Client<TLSClientStream>.self, providers: providers)
 let drop = Droplet(providers: providers)
 #endif
 
+drop.middleware.append(LoggingMiddleware(app: drop))
+drop.middleware.append(TimerMiddleware())
+
 let token: String? = Env["GITHUB_TOKEN"]
 let secretToken = token == nil ? "nil" : Array(repeating: "*", count: token!.count).joined(separator: "")
 print("GitHub token: \(secretToken)")
