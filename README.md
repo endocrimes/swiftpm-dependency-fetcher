@@ -3,7 +3,15 @@ Dependencies of your SwiftPM packages as a service.
 
 > Runs on [http://swiftpm-deps.honza.tech](http://swiftpm-deps.honza.tech).
 
+# Frontend
+
+You can take a peek at a package's dependencies by going to [http://swiftpm-deps.honza.tech](http://swiftpm-deps.honza.tech) and submitting the GitHub name of the package, e.g. `vapor/vapor`, to see the graph visualized.
+
+![](Meta/web.png)
+
 # Endpoints
+
+If you want to pull the image of your dependencies directly (into your README, for instance), the following endpoint should be useful. You can also use different visualization methods, such as an [interactive graph](http://swiftpm-deps.honza.tech/dependencies/vapor/vapor?format=d3deps).
 
 - Get dependencies of a GitHub SwiftPM package:`/dependencies/AUTHOR/REPO?format=FORMAT&tag=TAG`
 	- both `format` and `tag` are optional
