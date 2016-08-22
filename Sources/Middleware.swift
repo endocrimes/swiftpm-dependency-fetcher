@@ -27,7 +27,7 @@ class LoggingMiddleware: Middleware {
         let duration = -start.timeIntervalSinceNow
         let ms = Double(Int(duration * 1000 * 1000))/1000
         let durationText = "\(ms) ms"
-        app?.log.info("[\(Date())] \(request.method) \(request.uri.path)\(request.uri.query != nil ? "?\(request.uri.query!)" : "") -> \(response.status.statusCode) (\(durationText))")
+        app?.log.info("\(request.method) \(request.uri.path)\(request.uri.query != nil ? "?\(request.uri.query!)" : "") -> \(response.status.statusCode) (\(durationText))")
         return response
     }
 }
