@@ -106,7 +106,7 @@
     </object>
     <object type="LMREQUEST" id="z106">
         <attribute name="uuid" type="string">586FBA9F-1AA7-4FD7-9E08-37A7D29B524F</attribute>
-        <attribute name="url" type="string">http://swiftpm-deps.honza.tech/dependencies/vapor/vapor?format=png</attribute>
+        <attribute name="url" type="string">http://swiftpm-deps.honza.tech/dependencies/vapor/vapor?format=json\u2600tag=0.16.2</attribute>
         <attribute name="storecookies" type="bool">1</attribute>
         <attribute name="sendcookies" type="bool">1</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
