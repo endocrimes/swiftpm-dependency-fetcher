@@ -63,9 +63,10 @@
 		<a href="https://github.com/czechboy0/swiftpm-dependency-fetcher" target="_blank">Source &amp; Documentation</a>
 		<br>
 		<br>
-		SwiftPM Repo GitHub name:<br><br>
-		<input type="text" name="github_name" id="github_name" autofocus placeholder="czechboy0/Socks">
-		<button type="button" id="submit" onclick="fetch();">View dependencies 🚀</button>
+		SwiftPM Repo GitHub name:
+		<input type="text" name="github_name" id="github_name" autofocus placeholder="czechboy0/Socks"><br><br>
+		Tag (optional, latest by default):
+		<input type="text" name="tag" id="tag" autofocus placeholder="latest">
 		<div id="activityIndicator" class="loader"></div>
 		<div class="types">
 			<label><input type="radio" name="format" checked value="png"> PNG Graph</label>    
@@ -73,6 +74,7 @@
 			<label><input type="radio" name="format" value="json"> JSON</label>
 		</div>
 		<br>
+		<button type="button" id="submit" onclick="fetch();">View dependencies 🚀</button>
 		<hr>
 		<br>
 		<img id="dependencies" onload="stopLoading();" onerror="imageNotFound();">
@@ -91,8 +93,15 @@
 				document.getElementById("submit").click();
 			}
 		});
+		document.getElementById("tag")
+		.addEventListener("keyup", function(event) {
+			event.preventDefault();
+			if (event.keyCode == 13) {
+				document.getElementById("submit").click();
+			}
+		});
 
-		function imageNotFound() {
+		function imageNotFound(error) {
 			spinner.style.visibility = "hidden";
 			image.style.visibility = "hidden";
 			var repoName = document.getElementById('github_name').value;
@@ -121,12 +130,16 @@
 
 		function fetch() {
 			var repoName = document.getElementById('github_name').value;
+			var tag = document.getElementById('tag').value;
 			if (repoName.length == 0) {
 				alert("A valid GitHub repo name must be specified");
 				return;
 			}
 			var format = getSelectedFormat();
 			var link = "/dependencies/" + repoName + "?format=" + format;
+			if (tag.length > 0) {
+				link = link + "&tag=" + tag;
+			}
 			if (format === "png") {
 				startLoading();
 				image.src = link;				
