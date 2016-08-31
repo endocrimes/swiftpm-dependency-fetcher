@@ -53,7 +53,7 @@
 		.append("svg:g")
 		.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-        d3.json("{{ source_link }}", function(json) {
+        d3.json("#(source_link)", function(json) {
 			root = json;
 			root.x0 = h / 2;
 			root.y0 = 0;

@@ -1,4 +1,4 @@
-
+import Node
 import JSON
 
 extension DependencyGraph {
@@ -9,7 +9,7 @@ extension DependencyGraph {
             let source: String
             let target: String
             
-            private func makeNode() throws -> Node {
+            fileprivate func makeNode() throws -> Node {
                 return [
                     "source": source.makeNode(),
                     "target": target.makeNode(),
@@ -35,7 +35,7 @@ extension DependencyGraph {
             let source: String
             let dest: String
             
-            private func makeNode() throws -> Node {
+            fileprivate func makeNode() throws -> Node {
                 return [
                     "source": source.makeNode(),
                     "dest": dest.makeNode()
@@ -64,7 +64,7 @@ extension DependencyGraph {
             let name: String
             let children: [TreeNode]
             
-            private func makeNode() throws -> Node {
+            fileprivate func makeNode() throws -> Node {
                 var node: Node = [
                     "name": name.makeNode()
                 ]

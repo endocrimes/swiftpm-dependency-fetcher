@@ -8,7 +8,7 @@
             overflow: hidden;
         }
 
-        #editor {
+        #()editor {
             margin: 0;
             position: absolute;
             top: 0;
@@ -17,7 +17,7 @@
             height: 100%;
         }
 
-        #sidr {
+        #()sidr {
             width: 700px;
         }
     </style>
@@ -28,7 +28,7 @@
 <script type="text/javascript" src="/d3deps/underscore/underscore-min.js"></script>
 <script type="text/javascript" src="/d3deps/d3/d3.v3.js"></script>
 
-<script type="text/javascript" src="{{ source_link }}"></script>
+<script type="text/javascript" src="#(source_link)"></script>
 
 <!-- ================================================= -->
 <!-- ===========ACTUAL HTML           ================ -->
@@ -44,7 +44,7 @@
     <a href="https://github.com/PaulTaykalo/objc-dependency-visualizer">Based on PaulTaykalo/objc-dependency-visualizer</a><br>
 </form>
 
-<a id="simple-menu" class="editor-button" href="#sidr">Live editor</a>
+<a id="simple-menu" class="editor-button" href="#()sidr">Live editor</a>
 
 <div id="chart">
     <!-- Here the SVG will be placed-->
@@ -100,7 +100,7 @@ force.start()
 
 <script>
     $(document).ready(function () {
-        $('#simple-menu').sidr(
+        $('#()simple-menu').sidr(
                 {
                     displace: false,
                     onOpen: function () {
@@ -108,7 +108,7 @@ force.start()
                     }
                 }
         );
-        $("#chart").css("overflow", "hidden");
+        $("#()chart").css("overflow", "hidden");
 
     });
 </script>
@@ -152,10 +152,10 @@ force.start()
     //  =============== http://d3js.org/ Magic ===========
     //  ===================================================
 
-    // https://github.com/mbostock/d3/wiki/Ordinal-Scales#categorical-colors
+    // https://github.com/mbostock/d3/wiki/Ordinal-Scales#()categorical-colors
     var color = d3.scale.category10();
 
-    var container = d3.select("#chart").append("svg")
+    var container = d3.select("#()chart").append("svg")
             .attr("width", x)
             .attr("height", y)
             .style("overflow", "hidden");
@@ -225,7 +225,7 @@ force.start()
             .data(d3graph.links)
             .enter().append("path")
             .attr("class", "link")
-            .attr("marker-end", "url(#default)")
+            .attr("marker-end", "url(#()default)")
             .style("stroke-width", function (d) {
                 return 1;
             });
@@ -397,13 +397,13 @@ force.start()
                 .attr("marker-end", function (l) {
                     var filtered = !(l.sourceNode.name.match(re) && l.targetNode.name.match(re));
                     filtered = invert ? !filtered : filtered;
-                    return filtered ? "" : "url(#default)"
+                    return filtered ? "" : "url(#()default)"
                 })
                 .transition()
     }
 
 
-    d3.select("#search_input").on("input", function () {
+    d3.select("#()search_input").on("input", function () {
         // Filter all items
         console.log("Input changed to" + this.value);
         actions.deselect_selected_node();

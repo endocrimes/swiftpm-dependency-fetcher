@@ -16,7 +16,7 @@ public struct Task {
     
     public static func run(_ args: [String], data: Data? = nil, pwd: String? = nil, inheritEnvironment: Bool = true) throws -> TaskResult {
         
-        let task = Foundation.Task()
+        let task = Foundation.Process()
         
         var args = args
         
