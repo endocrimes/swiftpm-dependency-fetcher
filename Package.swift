@@ -8,6 +8,12 @@ let package = Package(
     	.Package(url: "https://github.com/czechboy0/Environment.git", majorVersion: 0, minor: 5),
         .Package(url: "https://github.com/czechboy0/Redbird.git", majorVersion: 0, minor: 9),
         .Package(url: "https://github.com/czechboy0/Tasks.git", majorVersion: 0, minor: 3)
+    ],
+    exclude: [
+        "Meta",
+        "Public",
+        "Redis",
+        "Resources"
     ]
 )
 
