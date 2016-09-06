@@ -16,7 +16,11 @@ public struct Task {
     
     public static func run(_ args: [String], data: Data? = nil, pwd: String? = nil, inheritEnvironment: Bool = true) throws -> TaskResult {
         
-        let task = Foundation.CommandLine()
+        #if os(Linux)
+        let task = Foundation.Task()
+        #else
+        let task = Foundation.Process()
+        #endif
         
         var args = args
         
