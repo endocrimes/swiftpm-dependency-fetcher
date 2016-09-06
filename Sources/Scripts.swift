@@ -16,7 +16,7 @@ public struct Task {
     
     public static func run(_ args: [String], data: Data? = nil, pwd: String? = nil, inheritEnvironment: Bool = true) throws -> TaskResult {
         
-        let task = Foundation.Process()
+        let task = Foundation.CommandLine()
         
         var args = args
         
@@ -24,11 +24,8 @@ public struct Task {
             task.currentDirectoryPath = pwd
         }
         
-        #if os(Linux)
-            let processInfo = ProcessInfo.processInfo()
-        #else
-            let processInfo = ProcessInfo.processInfo
-        #endif
+        
+        let processInfo = ProcessInfo.processInfo
         task.environment = processInfo.environment
         task.launchPath = try which(args.removeFirst())
         task.arguments = args
