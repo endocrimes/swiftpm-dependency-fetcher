@@ -10,14 +10,7 @@ extension Droplet {
     func makeClient(scheme: String, host: String) throws -> ClientProtocol {
         let httpClient: ClientProtocol
         if scheme == "https" {
-            //TODO: reference file properly
-            let certFile = "/Users/honzadvorsky/Documents/swiftpm-dependency-fetcher/Packages/TLS-0.7.0/Certs/mozilla_certs.pem"
-            let config: TLS.Config = try Config(
-                context: Context(mode: .client),
-                certificates: .certificateAuthority(signature: .signedFile(caCertificateFile: certFile))
-            )
-            let security: SecurityLayer = .tls(config)
-            httpClient = try client.init(host: host, port: 443, securityLayer: security)
+            httpClient = try client.init(host: host, port: 443, securityLayer: .tls(nil))
         } else {
             httpClient = try client.init(host: host, port: 80, securityLayer: .none)
         }
