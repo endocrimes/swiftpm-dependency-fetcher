@@ -36,7 +36,9 @@ extension OutputFormat {
             }
             let results = try Task.run(["dot", "-T", "png"], data: data)
             let png = Image(data: results.stdout)
-            return try png.makeResponse()
+            let response = try png.makeResponse()
+            response.headers["Cache-Control"] = "public, max-age=3600"
+            return response
             
         case .d3treejson:
             let d3 = try graph.asD3Tree()

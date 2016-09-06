@@ -1,153 +1,156 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<style>
+    <style>
 
-		body {
-			padding: 50px;
-			padding-top: 20px;
-			font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
-		}
+        body {
+            padding: 50px;
+            padding-top: 20px;
+            font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
+        }
 
-		a {
-			color: #00B7FF;
-		}
+        a {
+            color: #00B7FF;
+        }
 
-		img {
-			max-width: 100%;
-		}
+        img {
+            max-width: 100%;
+        }
 
-		.loader {
-			border: 5px solid #f3f3f3;
-			border-radius: 50%;
-			border-top: 5px solid #3498db;
-			width: 10px;
-			height: 10px;
-			-webkit-animation: spin 1s linear infinite;
-			animation: spin 1s linear infinite;
-		}
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 5px solid #3498db;
+            width: 10px;
+            height: 10px;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
 
-		.main {
-			text-align: center;
-		}
+        .main {
+            text-align: center;
+        }
 
-		.loader, img {
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-		}
+        .loader, img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-		.types {
-			float: center;
-			width: auto;
-		}
+        .types {
+            float: center;
+            width: auto;
+        }
 
-		label {
-			font: 12px "Lucida Grande", Helvetica, Arial, sans-serif
-		}
+        label {
+            font: 12px "Lucida Grande", Helvetica, Arial, sans-serif
+        }
 
-		@-webkit-keyframes spin {
-			0% { -webkit-transform: rotate(0deg); }
-			100% { -webkit-transform: rotate(360deg); }
-		}
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
 
-		@keyframes spin {
-			0% { transform: rotate(0deg); }
-			100% { transform: rotate(360deg); }
-		}
-	</style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-	<div class="main" id="container">
-		<h1>SwiftPM Dependency Viewer</h1>
-		<a href="https://github.com/czechboy0/swiftpm-dependency-fetcher" target="_blank">Source &amp; Documentation</a>
-		<br>
-		<br>
-		SwiftPM Repo GitHub name:
-		<input type="text" name="github_name" id="github_name" autofocus placeholder="czechboy0/Socks"><br><br>
-		Tag (optional, latest by default):
-		<input type="text" name="tag" id="tag" placeholder="latest">
-		<div id="activityIndicator" class="loader"></div>
-		<div class="types">
-			<label><input type="radio" name="format" checked value="png"> PNG Graph</label>    
-			<label><input type="radio" name="format" value="d3deps"> Interactive Graph</label>
-			<label><input type="radio" name="format" value="json"> JSON</label>
-		</div>
-		<br>
-		<button type="button" id="submit" onclick="fetch();">View dependencies 🚀</button>
-		<hr>
-		<br>
-		<img id="dependencies" onload="stopLoading();" onerror="imageNotFound();">
-	</div>
+    <div class="main" id="container">
+        <h1>SwiftPM Dependency Viewer</h1>
+        <a href="https://github.com/czechboy0/swiftpm-dependency-fetcher" target="_blank">Source &amp; Documentation</a>
+        <br>
+        <br>
+        SwiftPM Repo GitHub name:
+        <input type="text" name="github_name" id="github_name" autofocus placeholder="czechboy0/Socks"><br><br>
+        Tag (optional, latest by default):
+        <input type="text" name="tag" id="tag" placeholder="latest">
+        <div id="activityIndicator" class="loader"></div>
+        <div class="types">
+            <label><input type="radio" name="format" checked value="png"> PNG Graph</label>    
+            <label><input type="radio" name="format" value="d3deps"> Interactive Graph</label>
+            <label><input type="radio" name="format" value="json"> JSON</label>
+        </div>
+        <br>
+        <button type="button" id="submit" onclick="fetch();">View dependencies 🚀</button>
+        <hr>
+        <br>
+        <img id="dependencies" onload="stopLoading();" onerror="imageNotFound();">
+    </div>
 
-	<script type="text/javascript">
-		let spinner = document.getElementById('activityIndicator');
-		let image = document.getElementById('dependencies');
-		spinner.style.visibility = "hidden";
-		image.style.visibility = "hidden";
+    <script type="text/javascript">
+        let spinner = document.getElementById('activityIndicator');
+        let image = document.getElementById('dependencies');
+        spinner.style.visibility = "hidden";
+        image.style.visibility = "hidden";
 
-		document.getElementById("github_name")
-		.addEventListener("keyup", function(event) {
-			event.preventDefault();
-			if (event.keyCode == 13) {
-				document.getElementById("submit").click();
-			}
-		});
-		document.getElementById("tag")
-		.addEventListener("keyup", function(event) {
-			event.preventDefault();
-			if (event.keyCode == 13) {
-				document.getElementById("submit").click();
-			}
-		});
+        document.getElementById("github_name")
+        .addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode == 13) {
+                document.getElementById("submit").click();
+            }
+        });
+        document.getElementById("tag")
+        .addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode == 13) {
+                document.getElementById("submit").click();
+            }
+        });
 
-		function imageNotFound(error) {
-			spinner.style.visibility = "hidden";
-			image.style.visibility = "hidden";
-			var repoName = document.getElementById('github_name').value;
-			alert('An error occured. Is \"' + repoName + '\" a valid SwiftPM GitHub repo name?');
-		}
+        function imageNotFound(error) {
+            spinner.style.visibility = "hidden";
+            image.style.visibility = "hidden";
+            var repoName = document.getElementById('github_name').value;
+            alert('An error occured. Is \"' + repoName + '\" a valid SwiftPM GitHub repo name?');
+        }
 
-		function stopLoading() {
-			spinner.style.visibility = "hidden";
-			image.style.visibility = "visible";
-		}
+        function stopLoading() {
+            spinner.style.visibility = "hidden";
+            image.style.visibility = "visible";
+        }
 
-		function startLoading() {
-			spinner.style.visibility = "visible";
-			image.style.visibility = "hidden";
-		}
+        function startLoading() {
+            spinner.style.visibility = "visible";
+            image.style.visibility = "hidden";
+        }
 
-		function getSelectedFormat() {
-			var radios = document.getElementsByName('format');
-			for (var i = 0, length = radios.length; i < length; i++) {
-				if (radios[i].checked) {
-					return radios[i].value;
-				}
-			}
-			return null;
-		}
+        function getSelectedFormat() {
+            var radios = document.getElementsByName('format');
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    return radios[i].value;
+                }
+            }
+            return null;
+        }
 
-		function fetch() {
-			var repoName = document.getElementById('github_name').value;
-			var tag = document.getElementById('tag').value;
-			if (repoName.length == 0) {
-				alert("A valid GitHub repo name must be specified");
-				return;
-			}
-			var format = getSelectedFormat();
-			var link = "/dependencies/" + repoName + "?format=" + format;
-			if (tag.length > 0) {
-				link = link + "&tag=" + tag;
-			}
-			if (format === "png") {
-				startLoading();
-				image.src = link;				
-			} else {
-				var win = window.open(link, '_blank');
-				win.focus();
-			}
-		}
-	</script>
+        function fetch() {
+            var repoName = document.getElementById('github_name').value;
+            var tag = document.getElementById('tag').value;
+            if (repoName.length == 0) {
+                alert("A valid GitHub repo name must be specified");
+                return;
+            }
+            var format = getSelectedFormat();
+            var link = "/dependencies/" + repoName + "?format=" + format;
+            if (tag.length > 0) {
+                link = link + "&tag=" + tag;
+            }
+            if (format === "png") {
+                startLoading();
+                image.src = link;
+                if (image.complete) {
+                    stopLoading(); 
+                }
+            } else {
+                var win = window.open(link, '_blank');
+                win.focus();
+            }
+        }
+    </script>
 </body>
 </html>
