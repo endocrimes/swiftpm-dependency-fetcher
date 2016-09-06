@@ -5,18 +5,18 @@
 
   path.link {
     fill: none;
-    stroke: #666;
+    stroke: #()666;
     stroke-width: 1.5px;
   }
 
   circle {
-    fill: #ccc;
-    stroke: #fff;
+    fill: #()ccc;
+    stroke: #()fff;
     stroke-width: 1.5px;
   }
 
   text {
-    fill: #000;
+    fill: #()000;
     font: 10px sans-serif;
     pointer-events: none;
   }
@@ -75,7 +75,7 @@ var path = svg.append("svg:g").selectAll("path")
 .enter().append("svg:path")
 //    .attr("class", function(d) { return "link " + d.type; })
 .attr("class", "link")
-.attr("marker-end", "url(#end)");
+.attr("marker-end", "url(#()end)");
 
 // define the nodes
 var node = svg.selectAll(".node")

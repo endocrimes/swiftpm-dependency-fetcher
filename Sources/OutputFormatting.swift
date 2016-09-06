@@ -3,8 +3,6 @@ enum OutputFormat: String {
     case json //default
     case png
     case dot
-    case d3graphjson
-    case d3graph
     case d3treejson
     case d3tree
     case d3depsjs
@@ -40,10 +38,6 @@ extension OutputFormat {
             let png = Image(data: results.stdout)
             return try png.makeResponse()
             
-        case .d3graphjson:
-            let d3 = try graph.asD3Graph()
-            return d3.makeResponse()
-            
         case .d3treejson:
             let d3 = try graph.asD3Tree()
             return d3.makeResponse()
@@ -52,7 +46,7 @@ extension OutputFormat {
             let d3 = try graph.asD3Deps()
             return d3.makeResponse()
             
-        case .d3graph, .d3tree, .d3deps: fatalError()
+        case .d3tree, .d3deps: fatalError()
         }
     }
 }

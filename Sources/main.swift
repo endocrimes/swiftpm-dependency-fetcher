@@ -34,10 +34,6 @@ drop.get("dependencies", String.self, String.self) { req, author, projectName in
     let repoName = [author, projectName].joined(separator: "/").lowercased()
 
     switch format {
-    case .d3graph:
-        return try drop.view.make("d3-graph.leaf", [
-            "source_link": "/dependencies/\(repoName)?format=d3graphjson".makeNode()
-            ])
     case .d3tree:
         return try drop.view.make("d3-tree.leaf", [
             "source_link": "/dependencies/\(repoName)?format=d3treejson".makeNode()

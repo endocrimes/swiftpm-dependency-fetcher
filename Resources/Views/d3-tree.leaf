@@ -9,7 +9,7 @@
 
 		.node circle {
 			cursor: pointer;
-			fill: #fff;
+			fill: #()fff;
 			stroke: steelblue;
 			stroke-width: 1.5px;
 		}
@@ -20,7 +20,7 @@
 
 		path.link {
 			fill: none;
-			stroke: #ccc;
+			stroke: #()ccc;
 			stroke-width: 1.5px;
 		}
 
@@ -47,7 +47,7 @@
 		var diagonal = d3.svg.diagonal()
 		.projection(function(d) { return [d.y, d.x]; });
 
-		var vis = d3.select("#body").append("svg:svg")
+		var vis = d3.select("#()body").append("svg:svg")
 		.attr("width", w + m[1] + m[3])
 		.attr("height", h + m[0] + m[2])
 		.append("svg:g")
@@ -96,7 +96,7 @@ var nodeEnter = node.enter().append("svg:g")
 
 nodeEnter.append("svg:circle")
 .attr("r", 1e-6)
-.style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+.style("fill", function(d) { return d._children ? "lightsteelblue" : "#()fff"; });
 
 nodeEnter.append("svg:text")
 .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
@@ -112,7 +112,7 @@ var nodeUpdate = node.transition()
 
 nodeUpdate.select("circle")
 .attr("r", 4.5)
-.style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+.style("fill", function(d) { return d._children ? "lightsteelblue" : "#()fff"; });
 
 nodeUpdate.select("text")
 .style("fill-opacity", 1);
