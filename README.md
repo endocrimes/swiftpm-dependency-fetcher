@@ -26,7 +26,6 @@ If you want to pull the image of your dependencies directly (into your README, f
 		- [`d3graph`](#2-formatd3graph) a page with an interactive dependency graph 2 (experimental, will change)
 		- [`d3tree`](#3-formatd3tree) a page with an interactive dependency tree 3 (experimental, will change)
 		- `d3depsjs` dependencies in JavaScript format for a d3 graph 1 (experimental, will change)
-		- `d3graphjson` dependencies in JSON format for a d3 graph 2 (experimental, will change)
 		- `d3treejson` dependencies in JSON format for a d3 tree 3 (experimental, will change)
 
 # Example
@@ -60,11 +59,7 @@ You can also view your dependencies in 3 interactive formats. Just adjust the `f
 
 ![](Meta/d3-deps.png)
 
-## 2. format=d3graph
-
-![](Meta/d3-graph.png)
-
-## 3. format=d3tree
+## 2. format=d3tree
 
 ![](Meta/d3-tree.png)
 

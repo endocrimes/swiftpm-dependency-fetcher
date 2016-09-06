@@ -23,8 +23,8 @@ struct DependencyGraph: NodeConvertible {
 }
 
 func resolve(
-        getPackage: (String, Tag) throws -> Package,
-        getTags: (String) throws -> [Tag],
+        getPackage: @escaping (String, Tag) throws -> Package,
+        getTags: @escaping (String) throws -> [Tag],
         rootName: String,
         versions: Versions = Versions.all()
     ) throws -> DependencyGraph {

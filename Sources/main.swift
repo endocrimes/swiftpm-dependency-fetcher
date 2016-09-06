@@ -1,18 +1,10 @@
 import Vapor
-import VaporMustache
 import Environment
 import HTTP
 import JSON
 import Foundation
 
-let providers: [Vapor.Provider.Type] = [VaporMustache.Provider.self]
-
-#if os(Linux)
-import VaporTLS
-let drop = Droplet(client: Client<TLSClientStream>.self, providers: providers)
-#else
-let drop = Droplet(providers: providers)
-#endif
+let drop = Droplet()
 
 drop.middleware.append(LoggingMiddleware(app: drop))
 drop.middleware.append(TimerMiddleware())
@@ -29,30 +21,26 @@ drop.get("/") { _ in
 }
 
 drop.get("web") { _ in
-    return try drop.view("web.html")
+    return try drop.view.make("web.html")
 }
 
 drop.get("dependencies", String.self, String.self) { req, author, projectName in
     
-    let tagString = req.query?["tag"].string
-    let formatString = req.query?["format"].string ?? OutputFormat.json.rawValue
+    let tagString = req.query?["tag"]?.string
+    let formatString = req.query?["format"]?.string ?? OutputFormat.json.rawValue
     guard let format = OutputFormat(rawValue: formatString) else {
         return try Response(status: .badRequest, json: JSON(["error": "invalid format"]))
     }
     let repoName = [author, projectName].joined(separator: "/").lowercased()
 
     switch format {
-    case .d3graph:
-        return try drop.view("d3-graph.mustache", context: [
-            "source_link": "/dependencies/\(repoName)?format=d3graphjson"
-            ])
     case .d3tree:
-        return try drop.view("d3-tree.mustache", context: [
-            "source_link": "/dependencies/\(repoName)?format=d3treejson"
+        return try drop.view.make("d3-tree.leaf", [
+            "source_link": "/dependencies/\(repoName)?format=d3treejson".makeNode()
             ])
     case .d3deps:
-        return try drop.view("d3-deps.mustache", context: [
-            "source_link": "/dependencies/\(repoName)?format=d3depsjs"
+        return try drop.view.make("d3-deps.leaf", [
+            "source_link": "/dependencies/\(repoName)?format=d3depsjs".makeNode()
             ])
     default: break
     }

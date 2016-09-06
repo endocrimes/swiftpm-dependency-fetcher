@@ -5,7 +5,7 @@ import JSON
 extension Node {
     
     func jsonString() throws -> String {
-        let json = JSON.init(node: self, in: EmptyNode)
+        let json = try JSON.init(node: self, in: EmptyNode)
         let contents = try json.makeBytes().string
         return contents
     }
