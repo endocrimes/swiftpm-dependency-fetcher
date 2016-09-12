@@ -10,9 +10,9 @@ extension Droplet {
     func makeClient(scheme: String, host: String) throws -> ClientProtocol {
         let httpClient: ClientProtocol
         if scheme == "https" {
-            httpClient = try client.init(host: host, port: 443, securityLayer: .tls(nil))
+            httpClient = try client.init(scheme: scheme, host: host, port: 443, securityLayer: .tls(nil), middleware: [])
         } else {
-            httpClient = try client.init(host: host, port: 80, securityLayer: .none)
+            httpClient = try client.init(scheme: scheme, host: host, port: 80, securityLayer: .none, middleware: [])
         }
         return httpClient
     }
