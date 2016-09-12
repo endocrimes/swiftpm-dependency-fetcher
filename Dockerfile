@@ -1,7 +1,7 @@
 
 FROM kylef/swiftenv
 
-RUN swiftenv install DEVELOPMENT-SNAPSHOT-2016-08-18-a
+RUN swiftenv install 3.0-GM-CANDIDATE
 
 # install redis
 RUN cd /tmp && curl -O http://download.redis.io/redis-stable.tar.gz && tar xzvf redis-stable.tar.gz >/dev/null 2>&1 && cd redis-stable && make >/dev/null 2>&1 && make install
