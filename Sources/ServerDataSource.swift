@@ -17,6 +17,7 @@ class ServerDataSource {
         } catch ServerError.cacheMiss {
             //fetch and cache
             let package = try server.getPackage(name: name, tag: tag)
+            print("Fetched package \(package.githubName)")
             try local.savePackage(package: package, name: name, tag: tag)
             return package
         }
@@ -33,6 +34,7 @@ class ServerDataSource {
         case .notModified:
             return info!.0
         case .newData(let data):
+            print("Fetched tags \(name)")
             try local.saveTags(tags: data.0, name: name, etag: data.1)
             return data.0
         }

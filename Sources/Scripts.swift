@@ -6,6 +6,14 @@ public struct TaskResult {
     public let code: Int32
     public let stdout: Data
     public let stderr: Data
+    
+    public var stdoutStringUTF8: String {
+        return String(data: stdout, encoding: .utf8) ?? ""
+    }
+    
+    public var stderrStringUTF8: String {
+        return String(data: stderr, encoding: .utf8) ?? ""
+    }
 }
 
 public struct Task {

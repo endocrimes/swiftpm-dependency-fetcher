@@ -3,6 +3,7 @@ import Environment
 import HTTP
 import JSON
 import Foundation
+import Dispatch
 
 let drop = Droplet()
 
@@ -12,9 +13,16 @@ drop.middleware.append(TimerMiddleware())
 let token: String? = Env["GITHUB_TOKEN"]
 let secretToken = token == nil ? "nil" : Array(repeating: "*", count: token!.count).joined(separator: "")
 print("GitHub token: \(secretToken)")
-let db = try DB(port: 6380)
+func newDB() -> DB {
+    do {
+        return try DB(port: 6380)
+    } catch {
+        fatalError("Failed to create db connection: \(error)")
+    }
+}
+var dbPool: [DB] = []
 let xserver = CrossServerFetcher(drop: drop, token: token)
-let dataSource = ServerDataSource(local: db, server: xserver)
+let queue = DispatchQueue(label: "com.honzadvorsky.swiftpm-dependency-fetcher.db-pool")
 
 drop.get("/") { _ in
     return Response(redirect: "/web")
@@ -22,6 +30,29 @@ drop.get("/") { _ in
 
 drop.get("web") { _ in
     return try drop.view.make("web.html")
+}
+
+func synchronized<T>(_ block: () -> T) -> T {
+    var t: T? = nil
+    queue.sync {
+        t = block()
+    }
+    return t!
+}
+
+func getDBConnection() -> DB {
+    return synchronized {
+        if let db = dbPool.last {
+            return db
+        }
+        return newDB()
+    }
+}
+
+func putBackDBConnection(db: DB) {
+    synchronized {
+        dbPool.append(db)
+    }
 }
 
 drop.get("dependencies", String.self, String.self) { req, author, projectName in
@@ -56,6 +87,10 @@ drop.get("dependencies", String.self, String.self) { req, author, projectName in
         }
     }
     
+    let db = getDBConnection()
+    defer { putBackDBConnection(db: db) }
+    let dataSource = ServerDataSource(local: db, server: xserver)
+
     let tags = try dataSource.getTags(name: repoName)
     let version = try tags.latestWithConstraints(versions: versions)
     
