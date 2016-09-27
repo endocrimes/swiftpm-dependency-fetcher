@@ -15,4 +15,4 @@ EXPOSE 8080
 
 # mount in local sources via:  -v $(PWD):/package
 
-CMD redis-server ./Redis/redis.conf && swift build && .build/debug/swiftpm-dependency-fetcher
+CMD redis-server Redis/redis.conf && swift build && .build/debug/swiftpm-dependency-fetcher
