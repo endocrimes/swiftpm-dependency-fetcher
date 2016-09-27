@@ -12,7 +12,7 @@ drop.middleware.append(TimerMiddleware())
 let token: String? = Env["GITHUB_TOKEN"]
 let secretToken = token == nil ? "nil" : Array(repeating: "*", count: token!.count).joined(separator: "")
 print("GitHub token: \(secretToken)")
-let db = try DB(port: 6380)
+let db = try DB(port: 6379)
 let xserver = CrossServerFetcher(drop: drop, token: token)
 let dataSource = ServerDataSource(local: db, server: xserver)
 
