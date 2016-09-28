@@ -5,13 +5,13 @@ Dependencies of your SwiftPM packages as a service.
 
 # Frontend
 
-You can take a peek at a package's dependencies by going to [http://swiftpm-deps.honza.tech](http://swiftpm-deps.honza.tech) and submitting the GitHub name of the package, e.g. `vapor/vapor`, to see the graph visualized.
+You can take a peek at a package's dependencies by going to [http://swift-dependency-fetcher.endocrimes.com](http://swift-dependency-fetcher.endocrimes.com) and submitting the GitHub name of the package, e.g. `vapor/vapor`, to see the graph visualized.
 
 ![](Meta/web.png)
 
 # Endpoints
 
-If you want to pull the image of your dependencies directly (into your README, for instance), the following endpoint should be useful. You can also use different visualization methods, such as an [interactive graph](http://swiftpm-deps.honza.tech/dependencies/vapor/vapor?format=d3deps).
+If you want to pull the image of your dependencies directly (into your README, for instance), the following endpoint should be useful. You can also use different visualization methods, such as an [interactive graph](http://swift-dependency-fetcher.endocrimes.com/dependencies/vapor/vapor?format=d3deps).
 
 - Get dependencies of a GitHub SwiftPM package:`/dependencies/AUTHOR/REPO?format=FORMAT&tag=TAG`
 	- both `format` and `tag` are optional
@@ -30,7 +30,7 @@ If you want to pull the image of your dependencies directly (into your README, f
 
 # Example
 
-[http://swiftpm-deps.honza.tech/dependencies/vapor/vapor?format=png&tag=0.16.2](http://swiftpm-deps.honza.tech/dependencies/vapor/vapor?format=png&tag=0.16.2) returns the following rendered dependency tree
+[http://swift-dependency-fetcher.endocrimes.com/dependencies/vapor/vapor?format=png&tag=0.16.2](http://swift-dependency-fetcher.endocrimes.com/dependencies/vapor/vapor?format=png&tag=0.16.2) returns the following rendered dependency tree
 
 ![](Meta/vapor.png)
 
@@ -38,11 +38,11 @@ If you want to pull the image of your dependencies directly (into your README, f
 
 You can add an image of your dependency tree by just adding the following line
 
-`![](http://swiftpm-deps.honza.tech/dependencies/AUTHOR/REPO?format=png)`, where you fill in your `AUTHOR` and `REPO`. 
+`![](http://swift-dependency-fetcher.endocrimes.com/dependencies/AUTHOR/REPO?format=png)`, where you fill in your `AUTHOR` and `REPO`. 
 
 This is a live rendered dependency tree for this repository, `swiftpm-dependency-fetcher`:
 
-![](http://swiftpm-deps.honza.tech/dependencies/czechboy0/swiftpm-dependency-fetcher?format=png)
+![](http://swift-dependency-fetcher.endocrimes.com/dependencies/czechboy0/swiftpm-dependency-fetcher?format=png)
 
 > Please note that it might take a few seconds to render the image for the first time (then it's cached for 24 hours), so if your README fails to pull the image, refresh in a few seconds. I'm working on making things faster, but this is a way to keep things mostly correct.
 
