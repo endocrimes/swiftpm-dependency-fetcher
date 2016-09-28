@@ -1,5 +1,6 @@
 .DS_Store
 /.build
+/.build.osx
 /Packages
 /*.xcodeproj
 Redis/redis-persistence.rdb

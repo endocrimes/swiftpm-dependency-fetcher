@@ -15,8 +15,8 @@ class DB {
     
     private let redbird: Redbird
     
-    init(port: UInt16) throws {
-        let config = RedbirdConfig(address: "127.0.0.1", port: port, password: nil)
+    init(address: String = "127.0.0.1", port: UInt16, password: String? = nil) throws {
+        let config = RedbirdConfig(address: address, port: port, password: password)
         self.redbird = try Redbird(config: config)
     }
     

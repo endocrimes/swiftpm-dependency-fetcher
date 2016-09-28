@@ -10,4 +10,5 @@ EXPOSE 8080
 WORKDIR /app
 VOLUME /app
 
-CMD swift build && .build/debug/swiftpm-dependency-fetcher
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["run"]

@@ -2,12 +2,11 @@ version: '2'
 services:
   redis:
     image: redis:2.8.19
+    network_mode: "service:frontend"
   frontend:
     container_name: frontend
     build: .
     volumes:
       - .:/app
     ports:
-      - 8080:8080
-    depends_on:
-      - redis
+      - "8080:8080"
