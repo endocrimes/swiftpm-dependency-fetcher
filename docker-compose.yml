@@ -4,6 +4,7 @@ services:
     image: redis:2.8.19
     network_mode: "service:frontend"
   frontend:
+    env_file: .env
     container_name: frontend
     build: .
     volumes:
