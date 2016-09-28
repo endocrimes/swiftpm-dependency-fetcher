@@ -1,7 +1,7 @@
 # swiftpm-dependency-fetcher
 Dependencies of your SwiftPM packages as a service.
 
-> Runs on [http://swiftpm-deps.honza.tech](http://swiftpm-deps.honza.tech).
+> Runs on [http://swift-dependency-fetcher.endocrimes.com](http://swift-dependency-fetcher.endocrimes.com).
 
 # Frontend
 
